@@ -113,7 +113,7 @@ import (
 func main() {
 
 	v := macross.New()
-	v.Use(cache.Cacher(cache.Options{Adapter: "redis", AdapterConfig: `{"Addr":":6379"}`, Section: "test", Interval: 5}))
+	v.Use(cache.Cacher(cache.Options{Adapter: "redis", AdapterConfig: `{"Addr":"127.0.0.1:6379"}`, Section: "test", Interval: 5}))
 
 	v.Get("/cache/put/", func(self *macross.Context) error {
 		err := cache.Store(self).Set("name", "macross", 60)

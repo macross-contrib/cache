@@ -2,34 +2,32 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 
-	"github.com/insionng/vodka"
-	"github.com/insionng/vodka/engine/fasthttp"
-	"github.com/vodka-contrib/cache"
-	_ "github.com/vodka-contrib/cache/redis"
+	"github.com/insionng/macross"
+	"github.com/macross-contrib/cache"
+	_ "github.com/macross-contrib/cache/redis"
 )
 
 func main() {
 
-	v := vodka.New()
-	v.Use(cache.Cacher(cache.Options{Adapter: "redis", AdapterConfig: `{"Addr":":6379"}`, Section: "test", Interval: 5}))
+	v := macross.New()
+	v.Use(cache.Cacher(cache.Options{Adapter: "redis", AdapterConfig: `{"Addr":"127.0.0.1:6379"}`, Section: "test", Interval: 5}))
 
-	v.GET("/cache/put/", func(self vodka.Context) error {
-		err := cache.Store(self).Set("name", "vodka", 60)
+	v.Get("/cache/put/", func(self *macross.Context) error {
+		err := cache.Store(self).Set("name", "macross", 60)
 		if err != nil {
 			return err
 		}
 
-		return self.String(http.StatusOK, "store okay")
+		return self.String(macross.StatusOK, "store okay")
 	})
 
-	v.GET("/cache/get/", func(self vodka.Context) error {
+	v.Get("/cache/get/", func(self *macross.Context) error {
 		var name string
 		cache.Store(self).Get("name", &name)
 
-		return self.String(http.StatusOK, fmt.Sprintf("get name %s", name))
+		return self.String(macross.StatusOK, fmt.Sprintf("get name %s", name))
 	})
 
-	v.Run(fasthttp.New(":7891"))
+	v.Run(":7891")
 }
