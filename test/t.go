@@ -29,5 +29,5 @@ func main() {
 		return self.String(fmt.Sprintf("get name %s", name))
 	})
 
-	v.Run(":7891")
+	v.Listen(":7891")
 }
