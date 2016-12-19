@@ -26,9 +26,15 @@ func Store(value interface{}) Cache {
 	return cacher
 }
 
-func Cacher(opt Options) macross.Handler {
+func Cacher(opt ...Options) macross.Handler {
+	var option Options
+	if len(opt) > 0 {
+		option = opt[0]
+	} else {
+		option = Options{Adapter: "memory"}
+	}
 	return func(self *macross.Context) error {
-		tagcache, err := New(opt)
+		tagcache, err := New(option)
 		if err != nil {
 			return err
 		}
